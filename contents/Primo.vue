@@ -1,6 +1,7 @@
 <script lang="ts">
-import { ref, onMounted } from "vue";
+import { ref, onMounted, onBeforeMount, nextTick, onBeforeUpdate, onUnmounted } from "vue";
 import axios from 'axios';
+import envText from "data-text-env:~.env";
 import cssText from "data-text:~style.css";
 import type {
   PlasmoCSConfig,
@@ -46,6 +47,19 @@ const mountShadowHost: PlasmoMountShadowHost = ({ anchor, shadowHost }) => {
   }
 };
 
+const readEmail = () => {
+  const title = document.title;
+  const emailPattern = /([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}) - Gmail$/;
+  const emailMatch = title.match(emailPattern);
+  if (emailMatch) {
+    const email = emailMatch[1];
+    console.log(`Email trovata: ${email}`);
+    localStorage.setItem('email', email);
+  } else {
+    console.log("Nessuna email trovata");
+  }
+}
+
 export default {
   plasmo: {
     getInlineAnchor,
@@ -64,9 +78,30 @@ export default {
       }
     };
 
+    const observeTitleChange = () => {
+      const titleElement = document.querySelector('title');
+
+      if (titleElement) {
+        const observer = new MutationObserver((mutations) => { //simile a useEffct di react
+          mutations.forEach((mutation) => {
+            if (mutation.type === 'childList') {
+              readEmail();
+              observer.disconnect();
+            }
+          });
+        });
+
+        observer.observe(titleElement, { childList: true });
+      } else {
+        console.error("L'elemento title non esiste.");
+      }
+    };
+
+
     onMounted(() => {
       getInlineAnchor(isclicked);
       console.log("%c Componente montato", "color: #07f75b");
+      observeTitleChange(); // Start observing title changes
     });
 
     return {

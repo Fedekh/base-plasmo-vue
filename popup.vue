@@ -29,6 +29,9 @@ import "./style.css"
 import { reactive, ref } from "vue"
 import type { App } from "vue"
 import PrimoPerPopup from "~components/PrimoPerPopup.vue";
+import envText from "data-text-env:~.env";
+
+console.log(envText)
 
 const state = reactive({ count: 0, action: null })
 const isActive = ref(false)
