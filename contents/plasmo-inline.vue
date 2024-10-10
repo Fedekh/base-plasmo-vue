@@ -22,6 +22,7 @@ export const config: PlasmoCSConfig = {
 const getInlineAnchor: PlasmoGetInlineAnchor = (isclicked) => {
   const ancorButton = document.querySelector(".T-I.T-I-KE.L3") as HTMLElement;
   if (ancorButton) {
+    console.log(ancorButton);
     ancorButton.addEventListener("click", () => {
       isclicked.value = !isclicked.value;
     });
@@ -36,9 +37,10 @@ const getInlineAnchor: PlasmoGetInlineAnchor = (isclicked) => {
 
 const mountShadowHost: PlasmoMountShadowHost = ({ anchor, shadowHost }) => {
   if (anchor) {
-    const style = getStyle();
     // Inietto il CSS nel Shadow DOM
+    const style = getStyle();
     shadowHost.shadowRoot!.appendChild(style);
+
     console.log("Montando il componente...");
     anchor.element!.insertAdjacentElement('afterend', shadowHost!);
   }
