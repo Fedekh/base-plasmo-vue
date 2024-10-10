@@ -19,10 +19,10 @@ export const config: PlasmoCSConfig = {
   matches: ["https://mail.google.com/*"],
 };
 
+// DA CAPIRE PERCHE CI SONO INFINITI RENDERING DOPO if (ancorButton)
 const getInlineAnchor: PlasmoGetInlineAnchor = (isclicked) => {
   const ancorButton = document.querySelector(".T-I.T-I-KE.L3") as HTMLElement;
   if (ancorButton) {
-    console.log(ancorButton);
     ancorButton.addEventListener("click", () => {
       isclicked.value = !isclicked.value;
     });
@@ -79,14 +79,24 @@ export default {
 </script>
 
 <template>
-  <div class="pippo my-9 border-amber-100">
-    <span class="text-white text-3xl">{{ count }}</span>
-    <p class="text-red-500">{{ isclicked }}</p>
-    <button class="text-red-600" @click="count++">Many Myths are based on truth</button>
-    <button class="text-red-600" @click="fetchData">clicca esplodi</button>
+  <div class="pippo my-9 text-3xl">
+    <span class="text-white ">{{ count }}</span>
+    <p class="">{{ isclicked }}</p>
+    <button class="" @click="count++">aumenta counter</button>
+    <button class="" @click="fetchData">richiama fetch</button>
   </div>
 </template>
 
+
+<style scoped>
+.pippo {
+  background-color: sandybrown;
+  position: absolute;
+  top: 60px;
+  right: -300px;
+  width: 250px;
+}
+</style>
 
 /**
 getInlineAnchor è responsabile della selezione dell'elemento nel DOM e della restituzione di informazioni su di esso.
