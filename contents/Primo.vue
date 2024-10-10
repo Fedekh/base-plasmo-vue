@@ -4,27 +4,27 @@ import type {
   PlasmoGetInlineAnchor,
   PlasmoMountShadowHost,
 } from "plasmo";
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 import axios from 'axios';
-import cssText from "data-text:~style.css"
+import cssText from "data-text:~style.css";
+import Pippo from "./Pippo.vue";
 
 export const getStyle = () => {
-  const style = document.createElement("style")
-  style.textContent = cssText
-  return style
-}
-
+  const style = document.createElement("style");
+  style.textContent = cssText;
+  return style;
+};
 
 export const config: PlasmoCSConfig = {
   matches: ["https://mail.google.com/*"],
 };
 
-// DA CAPIRE PERCHE CI SONO INFINITI RENDERING DOPO if (ancorButton)
 const getInlineAnchor: PlasmoGetInlineAnchor = (isclicked) => {
   const ancorButton = document.querySelector(".T-I.T-I-KE.L3") as HTMLElement;
   if (ancorButton) {
     ancorButton.addEventListener("click", () => {
       isclicked.value = !isclicked.value;
+      console.log("Cliccato! Isclicked:", isclicked.value);
     });
     ancorButton.style.backgroundColor = "violet";
     return {
@@ -37,11 +37,9 @@ const getInlineAnchor: PlasmoGetInlineAnchor = (isclicked) => {
 
 const mountShadowHost: PlasmoMountShadowHost = ({ anchor, shadowHost }) => {
   if (anchor) {
-    // Inietto il CSS nel Shadow DOM
     const style = getStyle();
     shadowHost.shadowRoot!.appendChild(style);
-
-    console.log("Montando il componente...");
+    console.log("%c Montando il componente...", "color: #07f75b");
     anchor.element!.insertAdjacentElement('afterend', shadowHost!);
   }
 };
@@ -58,13 +56,16 @@ export default {
     const fetchData = async () => {
       try {
         const response = await axios.get('https://www.plasmo.com');
-        console.log("hai cliccato fetch");
+        console.log("%c hai cliccato fetch", "color: #07f75b");
       } catch (error) {
         console.error("Errore nella richiesta Axios:", error);
       }
     };
 
-    getInlineAnchor(isclicked);
+    onMounted(() => {
+      getInlineAnchor(isclicked);
+      console.log("%c Componente montato", "color: #07f75b");
+    });
 
     return {
       count,
@@ -72,11 +73,9 @@ export default {
       fetchData,
     };
   },
-  mounted() {
-    console.log("Componente montato");
-  },
 };
 </script>
+
 
 <template>
   <div class="pippo my-9 text-3xl">
@@ -84,6 +83,7 @@ export default {
     <p class="">{{ isclicked }}</p>
     <button class="" @click="count++">aumenta counter</button>
     <button class="" @click="fetchData">richiama fetch</button>
+    <Pippo />
   </div>
 </template>
 
