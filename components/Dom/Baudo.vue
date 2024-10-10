@@ -1,8 +1,12 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { onMounted, ref } from 'vue';
 
 // Definisci una variabile reattiva
 const message = ref('Benvenuto nel mio componente personalizzato!');
+
+onMounted(() => {
+    console.log('Componente BAUDO montato!');
+})
 </script>
 
 
@@ -12,6 +16,3 @@ const message = ref('Benvenuto nel mio componente personalizzato!');
         <p>{{ message }}</p>
     </div>
 </template>
-
-
-<style scoped></style>

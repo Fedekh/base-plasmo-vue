@@ -5,66 +5,69 @@ import type {
   PlasmoMountShadowHost,
 } from "plasmo";
 import { ref } from "vue";
+import axios from 'axios';
+import cssText from "data-text:~style.css"
+
+export const getStyle = () => {
+  const style = document.createElement("style")
+  style.textContent = cssText
+  return style
+}
+
 
 export const config: PlasmoCSConfig = {
   matches: ["https://mail.google.com/*"],
 };
 
-/**
- * Funzione per ottenere un'ancora per il componente inline.
- * Seleziona il pulsante "Scrivi" di Gmail e cambia il suo colore di sfondo.
- * 
- * @returns {Promise<{ element: HTMLElement } | null>} 
- *   Restituisce un oggetto contenente l'elemento del pulsante se trovato,
- *   altrimenti restituisce null.
- */
 const getInlineAnchor: PlasmoGetInlineAnchor = (isclicked) => {
-  // Seleziona il pulsante "Scrivi"
   const ancorButton = document.querySelector(".T-I.T-I-KE.L3") as HTMLElement;
   if (ancorButton) {
     ancorButton.addEventListener("click", () => {
-      // Cambia il valore di isclicked al click
       isclicked.value = !isclicked.value;
     });
-    // Cambia il colore di sfondo a viola
     ancorButton.style.backgroundColor = "violet";
     return {
       element: ancorButton,
+      insertPosition: "beforebegin",
     };
   }
   return null;
 };
 
-/**
- * Monta il componente nello shadow DOM in corrispondenza dell'ancora specificata.
- * Inserisce l'elemento shadowHost subito dopo l'elemento ancorato.
- * 
- * @param {Object} params - Parametri per la funzione.
- * @param {Object} params.anchor - Oggetto che rappresenta l'ancora, deve contenere l'elemento.
- * @param {HTMLElement} params.shadowHost - L'elemento del componente da montare nello shadow DOM.
- */
 const mountShadowHost: PlasmoMountShadowHost = ({ anchor, shadowHost }) => {
   if (anchor) {
+    const style = getStyle();
+    // Inietto il CSS nel Shadow DOM
+    shadowHost.shadowRoot!.appendChild(style);
     console.log("Montando il componente...");
-    anchor.element!.insertAdjacentElement('afterend', shadowHost!); // Monta il tuo componente dopo il pulsante
+    anchor.element!.insertAdjacentElement('afterend', shadowHost!);
   }
 };
-
 
 export default {
   plasmo: {
     getInlineAnchor,
-    mountShadowHost,
+    mountShadowHost
   },
   setup() {
     const count = ref(0);
     const isclicked = ref(false);
+
+    const fetchData = async () => {
+      try {
+        const response = await axios.get('https://www.plasmo.com');
+        console.log("hai cliccato fetch");
+      } catch (error) {
+        console.error("Errore nella richiesta Axios:", error);
+      }
+    };
 
     getInlineAnchor(isclicked);
 
     return {
       count,
       isclicked,
+      fetchData,
     };
   },
   mounted() {
@@ -74,10 +77,11 @@ export default {
 </script>
 
 <template>
-  <div class="pippo">
-    <span style="color: red">{{ count }}</span>
-    <p style="color: white">{{ isclicked }}</p>
-    <button @click="count++">Many Myths are based on truth</button>
+  <div class="pippo my-9 border-amber-100">
+    <span class="text-white text-3xl">{{ count }}</span>
+    <p class="text-red-500">{{ isclicked }}</p>
+    <button class="text-red-600" @click="count++">Many Myths are based on truth</button>
+    <button class="text-red-600" @click="fetchData">clicca esplodi</button>
   </div>
 </template>
 

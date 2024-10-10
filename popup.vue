@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h2 class="text-center">
+    <h2 class="text-center text-black text-4xl">
       Welcome to your
       <a href="https://www.plasmo.com" target="_blank">Plasmo</a> Extension!
     </h2>
@@ -19,24 +19,9 @@
   <a href="https://docs.plasmo.com" target="_blank"> View Docs </a>
 </template>
 
-<style>
-.container {
-  min-width: 470px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 47px;
-}
-.text-center {
-  text-align: center;
-}
-.action {
-  color: #470;
-  font-weight: bold;
-}
-</style>
 
 <script setup lang="ts">
+import "./style.css"
 import { reactive } from "vue"
 import type { App } from "vue"
 
@@ -59,3 +44,10 @@ defineOptions({
   }
 })
 </script>
+
+
+<style>
+.container {
+  min-width: 470px;
+}
+</style>
