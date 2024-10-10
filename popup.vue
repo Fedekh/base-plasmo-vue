@@ -17,15 +17,21 @@
     {{ state.action }}
   </p>
   <a href="https://docs.plasmo.com" target="_blank"> View Docs </a>
+  <p class="text-4xl" @click="isActive = !isActive">
+    fa vedere il componente
+  </p>
+  <PrimoPerPopup v-if="isActive" />
 </template>
 
 
 <script setup lang="ts">
 import "./style.css"
-import { reactive } from "vue"
+import { reactive, ref } from "vue"
 import type { App } from "vue"
+import PrimoPerPopup from "~components/PrimoPerPopup.vue";
 
 const state = reactive({ count: 0, action: null })
+const isActive = ref(false)
 
 function increment() {
   state.count++

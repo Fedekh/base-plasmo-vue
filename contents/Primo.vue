@@ -1,13 +1,13 @@
 <script lang="ts">
+import { ref, onMounted } from "vue";
+import axios from 'axios';
+import cssText from "data-text:~style.css";
 import type {
   PlasmoCSConfig,
   PlasmoGetInlineAnchor,
   PlasmoMountShadowHost,
 } from "plasmo";
-import { ref, onMounted } from "vue";
-import axios from 'axios';
-import cssText from "data-text:~style.css";
-import Pippo from "./Pippo.vue";
+
 
 export const getStyle = () => {
   const style = document.createElement("style");
@@ -19,17 +19,19 @@ export const config: PlasmoCSConfig = {
   matches: ["https://mail.google.com/*"],
 };
 
+/**
+ * restituisce un'ancora a cui successivamente mountShadowHost viene applicato
+ */
 const getInlineAnchor: PlasmoGetInlineAnchor = (isclicked) => {
   const ancorButton = document.querySelector(".T-I.T-I-KE.L3") as HTMLElement;
   if (ancorButton) {
-    ancorButton.addEventListener("click", () => {
-      isclicked.value = !isclicked.value;
-      console.log("Cliccato! Isclicked:", isclicked.value);
-    });
     ancorButton.style.backgroundColor = "violet";
+    ancorButton.addEventListener("click", () => {
+      isclicked = !isclicked;
+      console.log("Cliccato! Isclicked:", isclicked);
+    });
     return {
       element: ancorButton,
-      insertPosition: "beforebegin",
     };
   }
   return null;
@@ -83,7 +85,6 @@ export default {
     <p class="">{{ isclicked }}</p>
     <button class="" @click="count++">aumenta counter</button>
     <button class="" @click="fetchData">richiama fetch</button>
-    <Pippo />
   </div>
 </template>
 
