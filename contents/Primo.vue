@@ -1,5 +1,6 @@
 <script lang="ts">
-import { ref, onMounted, onBeforeMount, nextTick, onBeforeUpdate, onUnmounted } from "vue";
+import { ref, onMounted } from "vue";
+import { relayMessage, sendToBackground } from "@plasmohq/messaging"
 import axios from 'axios';
 import envText from "data-text-env:~.env";
 import cssText from "data-text:~style.css";
