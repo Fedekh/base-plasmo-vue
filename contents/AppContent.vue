@@ -1,6 +1,5 @@
 <script lang="ts">
 import { ref, onMounted } from "vue";
-import { relayMessage, sendToBackground } from "@plasmohq/messaging"
 import axios from 'axios';
 import envText from "data-text-env:~.env";
 import cssText from "data-text:~style.css";
@@ -20,18 +19,21 @@ export const getStyle = () => {
 export const config: PlasmoCSConfig = {
   matches: ["https://mail.google.com/*"],
 };
+const isClicked = ref(false);
+
+const handleButtonClick = () => {
+  isClicked.value = !isClicked.value;
+  console.log("Cliccato! IsClicked:", isClicked.value);
+};
 
 /**
  * restituisce un'ancora a cui successivamente mountShadowHost viene applicato
  */
-const getInlineAnchor: PlasmoGetInlineAnchor = (isclicked) => {
+const getInlineAnchor: PlasmoGetInlineAnchor = () => {
   const ancorButton = document.querySelector(".T-I.T-I-KE.L3") as HTMLElement;
   if (ancorButton) {
-    ancorButton.style.backgroundColor = "violet";
-    ancorButton.addEventListener("click", () => {
-      isclicked = !isclicked;
-      console.log("Cliccato! Isclicked:", isclicked);
-    });
+    ancorButton.removeEventListener("click", handleButtonClick);
+    ancorButton.addEventListener("click", handleButtonClick);
     return {
       element: ancorButton,
     };
@@ -68,8 +70,6 @@ export default {
   },
   setup() {
     const count = ref(0);
-    const isclicked = ref(false);
-
     const fetchData = async () => {
       try {
         const response = await axios.get('https://www.plasmo.com');
@@ -100,14 +100,14 @@ export default {
 
 
     onMounted(() => {
-      getInlineAnchor(isclicked);
+      getInlineAnchor(isClicked);
       console.log("%c Componente montato", "color: #07f75b");
       observeTitleChange(); // Start observing title changes
     });
 
     return {
       count,
-      isclicked,
+      isClicked,
       fetchData,
     };
   },
@@ -118,7 +118,7 @@ export default {
 <template>
   <div class="pippo my-9 text-3xl">
     <span class="text-white ">{{ count }}</span>
-    <p class="">{{ isclicked }}</p>
+    <p class="">{{ isClicked }}</p>
     <button class="" @click="count++">aumenta counter</button>
     <button class="" @click="fetchData">richiama fetch</button>
   </div>
