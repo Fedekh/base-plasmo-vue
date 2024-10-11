@@ -9,6 +9,7 @@ import type {
   PlasmoMountShadowHost,
 } from "plasmo";
 
+const isClicked = ref(false);
 
 export const getStyle = () => {
   const style = document.createElement("style");
@@ -19,7 +20,6 @@ export const getStyle = () => {
 export const config: PlasmoCSConfig = {
   matches: ["https://mail.google.com/*"],
 };
-const isClicked = ref(false);
 
 const handleButtonClick = () => {
   isClicked.value = !isClicked.value;
@@ -32,6 +32,8 @@ const handleButtonClick = () => {
 const getInlineAnchor: PlasmoGetInlineAnchor = () => {
   const ancorButton = document.querySelector(".T-I.T-I-KE.L3") as HTMLElement;
   if (ancorButton) {
+    ancorButton.style.backgroundColor = "violet";
+    ancorButton.style.color = "white";
     ancorButton.removeEventListener("click", handleButtonClick);
     ancorButton.addEventListener("click", handleButtonClick);
     return {
@@ -50,7 +52,7 @@ const mountShadowHost: PlasmoMountShadowHost = ({ anchor, shadowHost }) => {
   }
 };
 
-const readEmail = () => {
+const readEmail = async () => {
   const title = document.title;
   const emailPattern = /([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}) - Gmail$/;
   const emailMatch = title.match(emailPattern);
@@ -72,8 +74,8 @@ export default {
     const count = ref(0);
     const fetchData = async () => {
       try {
-        const response = await axios.get('https://www.plasmo.com');
-        console.log("%c hai cliccato fetch", "color: #07f75b");
+        const response = await axios.get('https://flynn.boolean.careers/exercises/api/random/name');
+        console.log("%c hai cliccato fetch", "color: #07f75b", response.data.response);
       } catch (error) {
         console.error("Errore nella richiesta Axios:", error);
       }
@@ -97,7 +99,6 @@ export default {
         console.error("L'elemento title non esiste.");
       }
     };
-
 
     onMounted(() => {
       getInlineAnchor(isClicked);
