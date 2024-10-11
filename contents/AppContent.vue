@@ -8,6 +8,7 @@ import type {
   PlasmoGetInlineAnchor,
   PlasmoMountShadowHost,
 } from "plasmo";
+import { sendToBackground } from "@plasmohq/messaging";
 
 const isClicked = ref(false);
 
@@ -52,17 +53,23 @@ const mountShadowHost: PlasmoMountShadowHost = ({ anchor, shadowHost }) => {
   }
 };
 
-const readEmail = async () => {
-  const title = document.title;
-  const emailPattern = /([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}) - Gmail$/;
-  const emailMatch = title.match(emailPattern);
-  if (emailMatch) {
-    const email = emailMatch[1];
-    console.log(`Email trovata: ${email}`);
-    localStorage.setItem('email', email);
-  } else {
-    console.log("Nessuna email trovata");
-  }
+const searchEmail = async () => {
+  let anchors = document.querySelectorAll('a[aria-label]');
+  let emailPattern = /\b[A-Za-z0-9._%+-]+@gmail\.com\b/;
+
+  anchors.forEach(a => {
+    let ariaLabel = a.getAttribute('aria-label');
+    let match = ariaLabel.match(emailPattern);
+    if (match) {
+      let email = match[0];
+      if (email) {
+        console.log(`Email trovata: ${email}`);
+        localStorage.setItem('email', email);
+      } else {
+        console.log("Nessuna email trovata");
+      }
+    }
+  });
 }
 
 export default {
@@ -88,7 +95,7 @@ export default {
         const observer = new MutationObserver((mutations) => { //simile a useEffct di react
           mutations.forEach((mutation) => {
             if (mutation.type === 'childList') {
-              readEmail();
+              searchEmail();
               observer.disconnect();
             }
           });
