@@ -137,8 +137,8 @@ export default {
 .pippo {
   background-color: sandybrown;
   position: absolute;
-  top: 60px;
-  right: -300px;
+  top: 22rem;
+  right: -8rem;
   width: 250px;
 }
 </style>
