@@ -9,12 +9,24 @@
 
 <script setup lang="ts">
 import "./style.css"
-import { ref } from "vue"
+import { ref, onMounted } from "vue"
 import type { App } from "vue"
 import ComponentForPopup from "~components/ComponentForPopup.vue"
 
 const isActive = ref(false)
+import { sendToBackground, } from "@plasmohq/messaging"
 
+//sendToBackground è una funzione che riceve un oggetto e lo invia al background
+const getEmail = async () => {
+  const resp = await sendToBackground({
+    name: "getEmail",
+  })
+  console.log(resp)
+}
+
+onMounted(async () => {
+  await getEmail()
+})
 // Opzioni per configurare eventuali plugin
 defineOptions({
   prepare(app: App) {

@@ -56,20 +56,31 @@ const mountShadowHost: PlasmoMountShadowHost = ({ anchor, shadowHost }) => {
 const searchEmail = async () => {
   let anchors = document.querySelectorAll('a[aria-label]');
   let emailPattern = /\b[A-Za-z0-9._%+-]+@gmail\.com\b/;
-
+  let email;
   anchors.forEach(a => {
     let ariaLabel = a.getAttribute('aria-label');
     let match = ariaLabel.match(emailPattern);
     if (match) {
-      let email = match[0];
+      email = match[0];
       if (email) {
         console.log(`Email trovata: ${email}`);
         localStorage.setItem('email', email);
+
       } else {
         console.log("Nessuna email trovata");
       }
     }
   });
+  console.log("sto per mandare l'email in BACKGROuND");
+  setTimeout(() => {
+
+    const resp = sendToBackground({
+      name: "getEmail",
+      body: email
+    })
+    console.log(resp);
+  }, 1000);
+
 }
 
 export default {
@@ -110,7 +121,8 @@ export default {
     onMounted(() => {
       getInlineAnchor(isClicked);
       console.log("%c Componente montato", "color: #07f75b");
-      observeTitleChange(); // Start observing title changes
+      observeTitleChange(); // osserva cambiamento di <title>
+
     });
 
     return {
